@@ -5,18 +5,41 @@ import BigButton from './components/BigButton.vue'
 import Counter from './components/Counter.vue'
 import Upgrade from './components/Upgrade.vue'
 import { GameState } from './gamestate'
+import JSConfetti from 'js-confetti'
 
 // Create an instance of GameState wrapped in a ref
 const gameState: Ref<GameState> = ref(new GameState())
 
-// Start the auto increment when the component is mounted
+// Create a ref for the JSConfetti instance
+const confetti = ref<JSConfetti | null>(null)
+
+// Start the auto increment and initialize JSConfetti when the component is mounted
 onMounted(() => {
   gameState.value.startAutoIncrement()
+  
+  // Initialize JSConfetti
+  confetti.value = new JSConfetti()
 })
 
-// Handle upgrade purchases
+// Handle upgrade purchases and show confetti
 const handleUpgrade = (cost: number, perClickBonus: number, perSecondBonus: number) => {
+  // Apply the upgrade
   gameState.value.purchaseUpgrade(cost, perClickBonus, perSecondBonus)
+  
+  // Show confetti
+  if (confetti.value) {
+    confetti.value.addConfetti({
+      confettiColors: [
+        '#40E0D0', // Turquoise (matching the button color)
+        '#28a745', // Green (matching the purchased color)
+        '#FFC107', // Yellow
+        '#FF5722', // Orange
+        '#E91E63'  // Pink
+      ],
+      confettiRadius: 6,
+      confettiNumber: 100
+    })
+  }
 }
 </script>
 
@@ -102,6 +125,7 @@ const handleUpgrade = (cost: number, perClickBonus: number, perSecondBonus: numb
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  width: 100%;
 }
 
 .content-wrapper {
