@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  clicker-game:
+    build: .
+    image: ghcr.io/floriankramer/cline-clicker-game:v1.0.0
+    ports:
+      - "80:80"
